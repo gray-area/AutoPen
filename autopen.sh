@@ -91,6 +91,10 @@ fi
 if [ ! -f "$url/recon/final.txt" ];then
 	touch $url/recon/final.txt
 fi
+
+echo
+
+blue "[+] Directory structure has been created!"
  
 purple "[+] Harvesting subdomains with assetfinder..." echo
 assetfinder $url >> $url/recon/final.txt
