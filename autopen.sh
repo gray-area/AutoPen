@@ -81,10 +81,10 @@ if [ ! -d "$url/recon/dnsrecon" ];then
 	mkdir $url/recon/dnsrecon
 fi
 if [ ! -d "$url/enumeration/whatweb" ];then
-	mkdir $url/enumration/whatweb
+	mkdir $url/enumeration/whatweb
 fi
 if [ ! -d "$url/enumeration/nikto" ];then
-	mkdir $url/enumration/nikto
+	mkdir $url/enumeration/nikto
 fi
 if [ ! -d "$url/recon/wayback/params" ];then
 	mkdir $url/recon/wayback/params
