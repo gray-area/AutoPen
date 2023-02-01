@@ -2,14 +2,6 @@
 
 # To check your $GOPATH, enter "go env" into terminal.
 # Script taken from Heath Adams PNPT
-# Script requires the following to be installed:
-#   go
-#   gowitness
-#   httprobe
-#   assetfinder
-#   Amass
-#   subjack
-#   nmap
 
 figlet AutoPen v.1
 
@@ -35,6 +27,7 @@ function purple(){
     fi
 }
 
+# Install Go tools required for functions.
 blue "[+] Installing gowitness..."
 go install github.com/sensepost/gowitness@latest
 blue "[+] Installing httprobe..."
