@@ -163,7 +163,7 @@ rm $url/recon/wayback/extensions/json1.txt
 rm $url/recon/wayback/extensions/php1.txt
 rm $url/recon/wayback/extensions/aspx1.txt
 
-purple "[+] Running dnsrecon w/ zonewalk,crt and axfr..." echo
+purple "[+] Running dnsrecon w/ zonewalk, crt and axfr..." echo
 dnsrecon -d $url -t zonewalk,crt,axfr > $url/recon/dnsrecon/dnsrecon.txt
 
 purple "[+] Running whatweb..." echo
