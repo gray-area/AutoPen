@@ -95,6 +95,10 @@ fi
 echo
 
 blue "[+] Directory structure has been created!"
+
+echo
+echo "Lets get to work..."
+echo
  
 purple "[+] Harvesting subdomains with assetfinder..." echo
 assetfinder $url >> $url/recon/final.txt
@@ -165,7 +169,9 @@ dnsrecon -d $url -t zonewalk,crt,axfr > $url/recon/dnsrecon/dnsrecon.txt
 purple "[+] Running whatweb..." echo
 whatweb www.$url > $url/enumeration/whatweb/whatweb.txt
 
-cat relax echo
+cat relax 
+echo
+echo
 
 purple "[+] Running nikto..." echo
 nikto -h www.$url > $url/enumeration/nikto/nikto.txt
