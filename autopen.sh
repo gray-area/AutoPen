@@ -180,7 +180,9 @@ purple "[+] Running nikto..." echo
 nikto -h www.$url > $url/enumeration/nikto/nikto.txt
 
 purple "[+] Running nuclei..." echo
-nuclei -l $url/recon/httprobe/alive.txt > $url/enumeration/nuclei/nuclei.txt
+nuclei -l $url/recon/httprobe/alive.txt > $url/enumeration/nuclei/n.txt
+cat $url/enumeration/nuclei/n.txt | sort > $url/enumeration/nuclei/nuclei.txt
+rm $url/enumeration/nuclei/n.txt
 
 purple "[+] Running gowitness against all compiled domains..." echo
 gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3
