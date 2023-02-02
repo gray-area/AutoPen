@@ -179,15 +179,12 @@ nikto -h www.$url > $url/enumeration/nikto/nikto.txt
 purple "[+] Running gowitness against all compiled domains..." echo
 gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3
 
-yserv='python3 -m http.server 4040'
-
-red "Would you like to view images? (yes or no) "
+red "Would you like to browse gowitness images and launch server? (yes or no) "
 read yesorno
 
 if [ "$yesorno" == yes ]; then
-        cd $url/recon/gowitness
-        firefox http://localhost:4040
-        $yserv
+        firefox file:///$(pwd)/$url/recon/gowitness
+	gowitness server -a localhost:4040
 
 elif [ "$yesorno" == no ]; then
         exit 1
