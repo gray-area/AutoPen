@@ -177,7 +177,7 @@ purple "[+] Running nikto..." echo
 nikto -h www.$url > $url/enumeration/nikto/nikto.txt
 
 purple "[+] Running gowitness against all compiled domains..." echo
-gowitness -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3
+gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3
 
 yserv='python3 -m http.server 4040'
 
