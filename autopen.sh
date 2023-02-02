@@ -79,6 +79,9 @@ fi
 if [ ! -d "$url/enumeration/nikto" ];then
 	mkdir $url/enumeration/nikto
 fi
+if [ ! -d "$url/enumeration/nuclei" ];then
+	mkdir $url/enumeration/nuclei
+fi
 if [ ! -d "$url/recon/wayback/params" ];then
 	mkdir $url/recon/wayback/params
 fi
@@ -175,6 +178,9 @@ echo
 
 purple "[+] Running nikto..." echo
 nikto -h www.$url > $url/enumeration/nikto/nikto.txt
+
+purple "[+] Running nuclei..." echo
+nuclei -l $url/recon/httprobe/alive.txt > $url/enumeration/nuclei/nuclei.txt
 
 purple "[+] Running gowitness against all compiled domains..." echo
 gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3
