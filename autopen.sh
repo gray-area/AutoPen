@@ -191,7 +191,8 @@ red "Would you like to browse gowitness images and launch server? (yes or no) "
 read yesorno
 
 if [ "$yesorno" == yes ]; then
-        firefox file:///$(pwd)/$url/recon/gowitness
+        #firefox file:///$(pwd)/$url/recon/gowitness
+	eog $url/recon/gowitness
 	gowitness server -a localhost:4040
 
 elif [ "$yesorno" == no ]; then
