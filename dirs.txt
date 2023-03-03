@@ -1,0 +1,10 @@
+$url/recon/scans
+$url/recon/httprobe
+$url/recon/potential_takeovers
+$url/recon/wayback
+$url/recon/dnsrecon
+$url/enumeration/whatweb
+$url/enumeration/nikto
+$url/enumeration/nuclei
+$url/recon/wayback/params
+$url/recon/wayback/extensions
