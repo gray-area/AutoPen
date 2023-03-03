@@ -204,4 +204,26 @@ else
 
 fi
 
+while read dir; do
+  files=$(find "$dir" -type f | wc -l)
+  print_table() {
+  perl -MText::ASCIITable -e '
+    $t = Text::ASCIITable->new({drawRowLine => 1});
+    while (defined($c = shift @ARGV) and $c ne "--") {
+      push @header, $c;
+      $cols++
+    }
+    $t->setCols(@header);
+    $rows = @ARGV / $cols;
+    for ($i = 0; $i < $rows; $i++) {
+      for ($j = 0; $j < $cols; $j++) {
+        $cell[$i][$j] = $ARGV[$j * $rows + $i]
+      }
+    }
+    $t->addRow(\@cell);
+    print $t' "$@"
+}
+  print_table Directory 'Files Created' -- \
+                "$dir"  "$files"
+done < dirs.txt
 
