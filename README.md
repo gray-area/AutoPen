@@ -19,6 +19,7 @@ More tools will be added over time, in order to automate some of the pentest pro
 ```
 # git clone https://github.com/gray-area/AutoPen.git
 # cd AutoPen
-# chmod +x autopen.sh
+# chmod +x install.sh autopen.sh
+# ./install.sh
 # ./autopen.sh
 ```
