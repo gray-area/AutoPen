@@ -190,26 +190,26 @@ else
 
 fi
 
-while read dir; do
-  files=$(find "$dir" -type f | wc -l)
-  print_table() {
-  perl -MText::ASCIITable -e '
-    $t = Text::ASCIITable->new({drawRowLine => 1});
-    while (defined($c = shift @ARGV) and $c ne "--") {
-      push @header, $c;
-      $cols++
-    }
-    $t->setCols(@header);
-    $rows = @ARGV / $cols;
-    for ($i = 0; $i < $rows; $i++) {
-      for ($j = 0; $j < $cols; $j++) {
-        $cell[$i][$j] = $ARGV[$j * $rows + $i]
-      }
-    }
-    $t->addRow(\@cell);
-    print $t' "$@"
+blue "[+] Here are the locations and number of files created...Happy Hacking!" echo
+print_row() {
+  local name="$1" path="$2" 
+  local count=$(find "$path" -maxdepth 1 -not -type d | grep -v ^d | wc -l)
+  printf "%-30s| %5d\n" "$name" "$count"
 }
-  print_table Directory 'Files Created' -- \
-                "$dir"  "$files"
-done < dirs.txt
+
+seperator=$(printf '%.s-' {1..30})
+printf "%-30s| %s\n" "Directory" "Files"
+printf "%-30s|%s\n" "$seperator" "$seperator"
+
+print_row "/recon/scans" "$url/recon/scans"
+print_row "/recon/httprobe" "$url/recon/httprobe"
+print_row "/recon/potential_takeovers" "$url/recon/potential_takeovers"
+print_row "/recon/wayback" "$url/recon/wayback"
+print_row "/recon/dnsrecon" "$url/recon/dnsrecon"
+print_row "/enumeration/whatweb" "$url/enumeration/whatweb"
+print_row "/enumeration/nikto" "$url/enumeration/nikto"
+print_row "/enumeration/nuclei" "$url/enumeration/nuclei"
+print_row "/recon/wayback/params" "$url/recon/wayback/params"
+print_row "/recon/wayback/extensions" "$url/recon/wayback/extensions"
+
 
