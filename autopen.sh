@@ -106,21 +106,21 @@ echo "Lets get to work..."
 echo
  
 purple "[+] Harvesting subdomains with assetfinder..."
-assetfinder $url >> $url/recon/final.txt
+(assetfinder $url >> $url/recon/final.txt) &
 spinner $!
 printf "\n"
  
 purple "[+] Double checking for subdomains with amass..."
-amass enum -d $url >> $url/recon/f.txt
+(amass enum -d $url >> $url/recon/f.txt
 sort -u $url/recon/f.txt >> $url/recon/final.txt
-rm $url/recon/f.txt
+rm $url/recon/f.txt) &
 spinner $!
 printf "\n"
  
 purple "[+] Probing for alive domains..."
-cat $url/recon/final.txt | sort -u | httprobe -s -p https:443 | sed 's/https\?:\/\///' | tr -d ':443' >> $url/recon/httprobe/a.txt
+(cat $url/recon/final.txt | sort -u | httprobe -s -p https:443 | sed 's/https\?:\/\///' | tr -d ':443' >> $url/recon/httprobe/a.txt
 sort -u $url/recon/httprobe/a.txt > $url/recon/httprobe/alive.txt
-rm $url/recon/httprobe/a.txt
+rm $url/recon/httprobe/a.txt) &
 spinner $!
 printf "\n"
 
@@ -130,29 +130,29 @@ if [ ! -f "$url/recon/potential_takeovers/potential_takeovers.txt" ];then
 	touch $url/recon/potential_takeovers/potential_takeovers.txt
 fi
  
-subjack -w $url/recon/final.txt -t 100 -timeout 30 -ssl -c /usr/share/subjack/fingerprints.json -v 3 -o $url/recon/potential_takeovers/potential_takeovers.txt
+(subjack -w $url/recon/final.txt -t 100 -timeout 30 -ssl -c /usr/share/subjack/fingerprints.json -v 3 -o $url/recon/potential_takeovers/potential_takeovers.txt) &
 spinner $!
 printf "\n"
  
 purple "[+] Scanning for open ports..."
-nmap -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned.txt
+(nmap -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned.txt) &
 spinner $!
 printf "\n"
 
 purple "[+] Scraping wayback data..."
-cat $url/recon/final.txt | waybackurls >> $url/recon/wayback/wayback_output.txt
-sort -u $url/recon/wayback/wayback_output.txt
+(cat $url/recon/final.txt | waybackurls >> $url/recon/wayback/wayback_output.txt
+sort -u $url/recon/wayback/wayback_output.txt) &
 spinner $!
 printf "\n"
 
 purple "[+] Pulling and compiling all possible params found in wayback data..."
-cat $url/recon/wayback/wayback_output.txt | grep '?*=' | cut -d '=' -f 1 | sort -u >> $url/recon/wayback/params/wayback_params.txt
-for line in $(cat $url/recon/wayback/params/wayback_params.txt);do echo $line'=';done
+(cat $url/recon/wayback/wayback_output.txt | grep '?*=' | cut -d '=' -f 1 | sort -u >> $url/recon/wayback/params/wayback_params.txt
+for line in $(cat $url/recon/wayback/params/wayback_params.txt);do echo $line'=';done) &
 spinner $!
 printf "\n"
 
 purple "[+] Pulling and compiling js/php/aspx/jsp/json files from wayback output..."
-for line in $(cat $url/recon/wayback/wayback_output.txt);do
+(for line in $(cat $url/recon/wayback/wayback_output.txt);do
 	ext="${line##*.}"
 	if [[ "$ext" == "js" ]]; then
 		echo $line >> $url/recon/wayback/extensions/js1.txt
@@ -180,38 +180,38 @@ rm $url/recon/wayback/extensions/js1.txt
 rm $url/recon/wayback/extensions/jsp1.txt
 rm $url/recon/wayback/extensions/json1.txt
 rm $url/recon/wayback/extensions/php1.txt
-rm $url/recon/wayback/extensions/aspx1.txt
+rm $url/recon/wayback/extensions/aspx1.txt) &
 spinner $!
 printf "\n"
 
 purple "[+] Running dnsrecon w/ zonewalk, crt and axfr..."
-dnsrecon -d $url -t zonewalk,crt,axfr > $url/recon/dnsrecon/dnsrecon.txt
+(dnsrecon -d $url -t zonewalk,crt,axfr > $url/recon/dnsrecon/dnsrecon.txt) &
 spinner $!
 printf "\n"
 
 purple "[+] Running whatweb..."
-whatweb www.$url > $url/enumeration/whatweb/whatweb.txt
+(whatweb www.$url > $url/enumeration/whatweb/whatweb.txt
 
 cat relax 
 echo
-echo
+echo) &
 spinner $!
 printf "\n"
 
 purple "[+] Running nikto..."
-nikto -h www.$url > $url/enumeration/nikto/nikto.txt
+(nikto -h www.$url > $url/enumeration/nikto/nikto.txt) &
 spinner $!
 printf "\n"
 
 purple "[+] Running nuclei..."
-nuclei -l $url/recon/httprobe/alive.txt > $url/enumeration/nuclei/n.txt
+(nuclei -l $url/recon/httprobe/alive.txt > $url/enumeration/nuclei/n.txt
 cat $url/enumeration/nuclei/n.txt | sort > $url/enumeration/nuclei/nuclei.txt
-rm $url/enumeration/nuclei/n.txt
+rm $url/enumeration/nuclei/n.txt) &
 spinner $!
 printf "\n"
 
 purple "[+] Running gowitness against all compiled domains..."
-gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3
+(gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3) &
 spinner $!
 printf "\n"
 
