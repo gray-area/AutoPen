@@ -5,6 +5,22 @@
 
 figlet AutoPen v.1
 
+# Creating a spinner to notify that task is still running
+spinner()
+{
+    local pid=$1
+    local delay=0.1
+    local spinstr='|/-\'
+    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+        local temp=${spinstr#?}
+        printf " [%c]  " "$spinstr"
+        local spinstr=$temp${spinstr%"$temp"}
+        sleep $delay
+        printf "\b\b\b\b\b\b"
+    done
+    printf "    \b\b\b\b"
+}
+
 # Adding color to output
 set +x
 #}
@@ -89,39 +105,53 @@ echo
 echo "Lets get to work..."
 echo
  
-purple "[+] Harvesting subdomains with assetfinder..." echo
+purple "[+] Harvesting subdomains with assetfinder..."
 assetfinder $url >> $url/recon/final.txt
+spinner $!
+printf "\n"
  
-purple "[+] Double checking for subdomains with amass..." echo
+purple "[+] Double checking for subdomains with amass..."
 amass enum -d $url >> $url/recon/f.txt
 sort -u $url/recon/f.txt >> $url/recon/final.txt
 rm $url/recon/f.txt
+spinner $!
+printf "\n"
  
-purple "[+] Probing for alive domains..." echo
+purple "[+] Probing for alive domains..."
 cat $url/recon/final.txt | sort -u | httprobe -s -p https:443 | sed 's/https\?:\/\///' | tr -d ':443' >> $url/recon/httprobe/a.txt
 sort -u $url/recon/httprobe/a.txt > $url/recon/httprobe/alive.txt
 rm $url/recon/httprobe/a.txt
- 
-purple "[+] Checking for possible subdomain takeover..." echo
+spinner $!
+printf "\n"
+
+purple "[+] Checking for possible subdomain takeover..."
  
 if [ ! -f "$url/recon/potential_takeovers/potential_takeovers.txt" ];then
 	touch $url/recon/potential_takeovers/potential_takeovers.txt
 fi
  
 subjack -w $url/recon/final.txt -t 100 -timeout 30 -ssl -c /usr/share/subjack/fingerprints.json -v 3 -o $url/recon/potential_takeovers/potential_takeovers.txt
+spinner $!
+printf "\n"
  
-purple "[+] Scanning for open ports..." echo
+purple "[+] Scanning for open ports..."
 nmap -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned.txt
- 
-purple "[+] Scraping wayback data..." echo
+spinner $!
+printf "\n"
+
+purple "[+] Scraping wayback data..."
 cat $url/recon/final.txt | waybackurls >> $url/recon/wayback/wayback_output.txt
 sort -u $url/recon/wayback/wayback_output.txt
- 
-purple "[+] Pulling and compiling all possible params found in wayback data..." echo
+spinner $!
+printf "\n"
+
+purple "[+] Pulling and compiling all possible params found in wayback data..."
 cat $url/recon/wayback/wayback_output.txt | grep '?*=' | cut -d '=' -f 1 | sort -u >> $url/recon/wayback/params/wayback_params.txt
 for line in $(cat $url/recon/wayback/params/wayback_params.txt);do echo $line'=';done
- 
-purple "[+] Pulling and compiling js/php/aspx/jsp/json files from wayback output..." echo
+spinner $!
+printf "\n"
+
+purple "[+] Pulling and compiling js/php/aspx/jsp/json files from wayback output..."
 for line in $(cat $url/recon/wayback/wayback_output.txt);do
 	ext="${line##*.}"
 	if [[ "$ext" == "js" ]]; then
@@ -151,27 +181,39 @@ rm $url/recon/wayback/extensions/jsp1.txt
 rm $url/recon/wayback/extensions/json1.txt
 rm $url/recon/wayback/extensions/php1.txt
 rm $url/recon/wayback/extensions/aspx1.txt
+spinner $!
+printf "\n"
 
-purple "[+] Running dnsrecon w/ zonewalk, crt and axfr..." echo
+purple "[+] Running dnsrecon w/ zonewalk, crt and axfr..."
 dnsrecon -d $url -t zonewalk,crt,axfr > $url/recon/dnsrecon/dnsrecon.txt
+spinner $!
+printf "\n"
 
-purple "[+] Running whatweb..." echo
+purple "[+] Running whatweb..."
 whatweb www.$url > $url/enumeration/whatweb/whatweb.txt
 
 cat relax 
 echo
 echo
+spinner $!
+printf "\n"
 
-purple "[+] Running nikto..." echo
+purple "[+] Running nikto..."
 nikto -h www.$url > $url/enumeration/nikto/nikto.txt
+spinner $!
+printf "\n"
 
-purple "[+] Running nuclei..." echo
+purple "[+] Running nuclei..."
 nuclei -l $url/recon/httprobe/alive.txt > $url/enumeration/nuclei/n.txt
 cat $url/enumeration/nuclei/n.txt | sort > $url/enumeration/nuclei/nuclei.txt
 rm $url/enumeration/nuclei/n.txt
+spinner $!
+printf "\n"
 
-purple "[+] Running gowitness against all compiled domains..." echo
+purple "[+] Running gowitness against all compiled domains..."
 gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3
+spinner $!
+printf "\n"
 
 # Function to print Directories and Files created to a table
 blue "[+] Here are the locations and number of files created...Happy Hacking!" echo
