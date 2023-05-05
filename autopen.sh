@@ -173,23 +173,7 @@ rm $url/enumeration/nuclei/n.txt
 purple "[+] Running gowitness against all compiled domains..." echo
 gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3
 
-red "Would you like to browse gowitness images and launch server? (yes or no) "
-read yesorno
-
-if [ "$yesorno" == yes ]; then
-        #firefox file:///$(pwd)/$url/recon/gowitness
-	eog $url/recon/gowitness
-	gowitness server -a localhost:4040
-
-elif [ "$yesorno" == no ]; then
-        exit 1
-
-else
-        red "Not a valid answer."
-        exit 1
-
-fi
-
+# Function to print Directories and Files created to a table
 blue "[+] Here are the locations and number of files created...Happy Hacking!" echo
 print_row() {
   local name="$1" path="$2" 
@@ -211,5 +195,22 @@ print_row "/enumeration/nikto" "$url/enumeration/nikto"
 print_row "/enumeration/nuclei" "$url/enumeration/nuclei"
 print_row "/recon/wayback/params" "$url/recon/wayback/params"
 print_row "/recon/wayback/extensions" "$url/recon/wayback/extensions"
+
+red "Would you like to browse gowitness images and launch server? (yes or no) "
+read yesorno
+
+if [ "$yesorno" == yes ]; then
+        #firefox file:///$(pwd)/$url/recon/gowitness
+	eog $url/recon/gowitness
+	gowitness server -a localhost:4040
+
+elif [ "$yesorno" == no ]; then
+        exit 1
+
+else
+        red "Not a valid answer."
+        exit 1
+
+fi
 
 
