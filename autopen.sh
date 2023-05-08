@@ -48,14 +48,25 @@ red "Enter Domain in format: domain.com. Do not place www before."
 
 read -p "Enter Domain: " url
 
-if [ ! -d "$url" ];then
+# Function to display the menu
+show_menu() {
+    echo "========= MENU ========="
+    echo "1. Recon"
+    echo "2. Enumerate"
+    echo "3. YOLO"
+    echo "4. Exit"
+    echo "========================"}
+}
+
+    if [ ! -d "$url" ];then
         mkdir $url
 fi
+
+# Function to run Recon
+run_recon() {
+
 if [ ! -d "$url/recon" ];then
         mkdir $url/recon
-fi
-if [ ! -d "$url/enumeration" ];then
-        mkdir $url/enumeration
 fi
 if [ ! -d "$url/recon/gowitness" ];then
         mkdir $url/recon/gowitness
@@ -87,25 +98,9 @@ fi
 if [ ! -f "$url/recon/final.txt" ];then
         touch $url/recon/final.txt
 fi
-if [ ! -d "$url/enumeration/whatweb" ];then
-        mkdir $url/enumeration/whatweb
-fi
-if [ ! -d "$url/enumeration/nikto" ];then
-        mkdir $url/enumeration/nikto
-fi
-if [ ! -d "$url/enumeration/nuclei" ];then
-        mkdir $url/enumeration/nuclei
-fi
 
-echo
-
-blue "[+] Directory structure has been created!"
-
-echo
-echo "Lets get to work..."
-echo
- 
-purple "[+] Harvesting subdomains with assetfinder..."
+echo "Running Recon..."
+    purple "[+] Harvesting subdomains with assetfinder..."
 (assetfinder $url >> $url/recon/final.txt) &
 spinner $!
 printf "\n"
@@ -187,6 +182,31 @@ purple "[+] Running dnsrecon w/ zonewalk, crt and axfr..."
 spinner $!
 printf "\n"
 
+purple "[+] Running gowitness against all compiled domains..."
+(gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3) &
+spinner $!
+printf "\n"
+
+    echo "Recon executed."
+    echo
+}
+
+# Function to run Enumerate
+run_enum() {
+    echo "Running Enumerate..."
+    if [ ! -d "$url/enumeration" ];then
+        mkdir $url/enumeration
+fi
+
+if [ ! -d "$url/enumeration/whatweb" ];then
+        mkdir $url/enumeration/whatweb
+fi
+if [ ! -d "$url/enumeration/nikto" ];then
+        mkdir $url/enumeration/nikto
+fi
+if [ ! -d "$url/enumeration/nuclei" ];then
+        mkdir $url/enumeration/nuclei
+fi
 purple "[+] Running whatweb..."
 (whatweb www.$url > $url/enumeration/whatweb/whatweb.txt
 
@@ -207,11 +227,46 @@ cat $url/enumeration/nuclei/n.txt | sort > $url/enumeration/nuclei/nuclei.txt
 rm $url/enumeration/nuclei/n.txt) &
 spinner $!
 printf "\n"
+    echo "Enumerate executed."
+    echo
+}
 
-purple "[+] Running gowitness against all compiled domains..."
-(gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3) &
-spinner $!
-printf "\n"
+
+echo
+
+blue "[+] Directory structure has been created!"
+
+echo
+echo "Lets get to work..."
+echo
+
+
+# Main program loop
+while true; do
+    show_menu
+    read -p "Enter your choice (1-4): " choice
+    echo
+
+    case $choice in
+        1)
+            run_recon
+            ;;
+        2)
+            run_enum
+            ;;
+        3)
+            run_recon && run_enum
+            ;;
+        4)
+            echo "Exiting..."
+            break
+            ;;
+        *)
+            echo "Invalid choice. Please enter a number from 1 to 4."
+            echo
+            ;;
+    esac
+done
 
 # Function to print Directories and Files created to a table
 blue "[+] Here are the locations and number of files created...Happy Hacking!" echo
@@ -252,5 +307,4 @@ else
         exit 1
 
 fi
-
 
