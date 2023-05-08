@@ -6,5 +6,6 @@ $url/recon/dnsrecon
 $url/enumeration/whatweb
 $url/enumeration/nikto
 $url/enumeration/nuclei
+$url/enumeration/wpscan
 $url/recon/wayback/params
 $url/recon/wayback/extensions
