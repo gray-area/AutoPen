@@ -19,10 +19,10 @@ go install github.com/OWASP/Amass/v3/...@latest
 blue "[+] Installing subjack..."
 go install github.com/haccer/subjack@latest
 
-blue "[+] Installing CMSmap..."
-sudo git clone github.com/dionach/CMSmap.git
-cd CMSmap
-sudo pip3 install .
+#blue "[+] Installing CMSmap..."
+#sudo git clone github.com/dionach/CMSmap.git
+#cd CMSmap
+#sudo pip3 install .
 
 # Move Go path to user path
 sudo cp -r /home/$USER/go/bin/* /usr/sbin
