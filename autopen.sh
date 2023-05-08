@@ -49,52 +49,52 @@ red "Enter Domain in format: domain.com. Do not place www before."
 read -p "Enter Domain: " url
 
 if [ ! -d "$url" ];then
-	mkdir $url
+        mkdir $url
 fi
 if [ ! -d "$url/recon" ];then
-	mkdir $url/recon
+        mkdir $url/recon
 fi
 if [ ! -d "$url/enumeration" ];then
-	mkdir $url/enumeration
+        mkdir $url/enumeration
 fi
-if [ ! -d '$url/recon/gowitness' ];then
-  	mkdir $url/recon/gowitness
+if [ ! -d "$url/recon/gowitness" ];then
+        mkdir $url/recon/gowitness
 fi
 if [ ! -d "$url/recon/scans" ];then
-	mkdir $url/recon/scans
+        mkdir $url/recon/scans
 fi
 if [ ! -d "$url/recon/httprobe" ];then
-	mkdir $url/recon/httprobe
+        mkdir $url/recon/httprobe
 fi
 if [ ! -d "$url/recon/potential_takeovers" ];then
-	mkdir $url/recon/potential_takeovers
+        mkdir $url/recon/potential_takeovers
 fi
 if [ ! -d "$url/recon/wayback" ];then
-	mkdir $url/recon/wayback
+        mkdir $url/recon/wayback
 fi
 if [ ! -d "$url/recon/dnsrecon" ];then
-	mkdir $url/recon/dnsrecon
-fi
-if [ ! -d "$url/enumeration/whatweb" ];then
-	mkdir $url/enumeration/whatweb
-fi
-if [ ! -d "$url/enumeration/nikto" ];then
-	mkdir $url/enumeration/nikto
-fi
-if [ ! -d "$url/enumeration/nuclei" ];then
-	mkdir $url/enumeration/nuclei
+        mkdir $url/recon/dnsrecon
 fi
 if [ ! -d "$url/recon/wayback/params" ];then
-	mkdir $url/recon/wayback/params
+        mkdir $url/recon/wayback/params
 fi
 if [ ! -d "$url/recon/wayback/extensions" ];then
-	mkdir $url/recon/wayback/extensions
+        mkdir $url/recon/wayback/extensions
 fi
 if [ ! -f "$url/recon/httprobe/alive.txt" ];then
-	touch $url/recon/httprobe/alive.txt
+        touch $url/recon/httprobe/alive.txt
 fi
 if [ ! -f "$url/recon/final.txt" ];then
-	touch $url/recon/final.txt
+        touch $url/recon/final.txt
+fi
+if [ ! -d "$url/enumeration/whatweb" ];then
+        mkdir $url/enumeration/whatweb
+fi
+if [ ! -d "$url/enumeration/nikto" ];then
+        mkdir $url/enumeration/nikto
+fi
+if [ ! -d "$url/enumeration/nuclei" ];then
+        mkdir $url/enumeration/nuclei
 fi
 
 echo
