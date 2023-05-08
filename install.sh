@@ -20,9 +20,9 @@ blue "[+] Installing subjack..."
 go install github.com/haccer/subjack@latest
 
 blue "[+] Installing CMSmap..."
-git clone github.com/dionach/CMSmap.git
+sudo git clone github.com/dionach/CMSmap.git
 cd CMSmap
-setup.py
+sudo pip3 install .
 
 # Move Go path to user path
 sudo cp -r /home/$USER/go/bin/* /usr/sbin
