@@ -1,5 +1,27 @@
 #! /bin/bash
 
+# Adding color to output
+set +x
+#}
+function red(){
+    echo -e "\x1B[31m $1 \x1B[0m"
+    if [ ! -z "${2}" ]; then
+    echo -e "\x1B[31m $($2) \x1B[0m"
+    fi
+}
+function blue(){
+    echo -e "\x1B[34m $1 \x1B[0m"
+    if [ ! -z "${2}" ]; then
+    echo -e "\x1B[34m $($2) \x1B[0m"
+    fi
+}
+function purple(){
+    echo -e "\x1B[35m $1 \x1B[0m \c"
+    if [ ! -z "${2}" ]; then
+    echo -e "\x1B[35m $($2) \x1B[0m"
+    fi
+}
+
 #Install extras
 sudo apt install figlet
 sudo apt install libtext-asciitable-perl
