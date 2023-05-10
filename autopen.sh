@@ -99,13 +99,22 @@ if [ ! -f "$url/recon/final.txt" ];then
         touch $url/recon/final.txt
 fi
 
+echo
+
+blue "[+] Recon directory structure has been created!"
+
+echo
+echo "Lets get to work..."
+echo
+
 echo "Running Recon..."
-    purple "[+] Harvesting subdomains with assetfinder..."
+echo
+purple "[+] Harvesting subdomains with AssetFinder..."
 (assetfinder $url >> $url/recon/final.txt) &
 spinner $!
 printf "\n"
  
-purple "[+] Double checking for subdomains with amass..."
+purple "[+] Double checking for subdomains with Amass..."
 (amass enum -d $url >> $url/recon/f.txt
 sort -u $url/recon/f.txt >> $url/recon/final.txt
 rm $url/recon/f.txt) &
@@ -177,12 +186,12 @@ rm $url/recon/wayback/extensions/aspx1.txt) &
 spinner $!
 printf "\n"
 
-purple "[+] Running dnsrecon w/ zonewalk, crt and axfr..."
+purple "[+] Running DNSRecon w/ zonewalk, crt and axfr..."
 (dnsrecon -d $url -t zonewalk,crt,axfr > $url/recon/dnsrecon/dnsrecon.txt) &
 spinner $!
 printf "\n"
 
-purple "[+] Running gowitness against all compiled domains..."
+purple "[+] Running GoWitness against all compiled domains..."
 (gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3) &
 spinner $!
 printf "\n"
@@ -194,10 +203,10 @@ printf "\n"
 # Function to run Enumerate
 run_enum() {
     echo "Running Enumerate..."
-    if [ ! -d "$url/enumeration" ];then
+	echo
+if [ ! -d "$url/enumeration" ];then
         mkdir $url/enumeration
 fi
-
 if [ ! -d "$url/enumeration/whatweb" ];then
         mkdir $url/enumeration/whatweb
 fi
@@ -207,7 +216,19 @@ fi
 if [ ! -d "$url/enumeration/nuclei" ];then
         mkdir $url/enumeration/nuclei
 fi
-purple "[+] Running whatweb..."
+if [ ! -d "$url/enumeration/wpscan" ];then
+        mkdir $url/enumeration/wpscan
+fi
+
+echo
+
+blue "[+] Enumeration directory structure has been created!"
+
+echo
+echo "Lets get to work..."
+echo
+
+purple "[+] Running WhatWeb..."
 (whatweb www.$url > $url/enumeration/whatweb/whatweb.txt
 
 cat relax 
@@ -216,13 +237,13 @@ echo) &
 spinner $!
 printf "\n"
 
-purple "[+] Running nikto..."
+purple "[+] Running Nikto..."
 (nikto -h www.$url > $url/enumeration/nikto/nikto.txt) &
 spinner $!
 printf "\n"
 
-purple "[+] Running nuclei..."
-(nuclei -l $url/recon/httprobe/alive.txt > $url/enumeration/nuclei/n.txt
+purple "[+] Running Nuclei..."
+(nuclei -u https://www.$url > $url/enumeration/nuclei/n.txt
 cat $url/enumeration/nuclei/n.txt | sort > $url/enumeration/nuclei/nuclei.txt
 rm $url/enumeration/nuclei/n.txt) &
 spinner $!
@@ -231,14 +252,12 @@ printf "\n"
     echo
 }
 
+purple "[+] Running WPScan..."
+(grep wordpress-detect $url/enumeration/nuclei/nuclei.txt | grep -o 'https\?://[^ ]*' | sed '/$url/!d' | sort -u > $url/enumeration/wpscan/wp_urls.txt
+cat $url/enumeration/wpscan/wp_urls.txt | while true ; do read url; if [ "" = "$wpscanned" ] ; then break; fi ; wpscan --url $wpscanned -e -o $wpscanned_results.txt; done) &
+spinner $!
+printf "\n"
 
-echo
-
-blue "[+] Directory structure has been created!"
-
-echo
-echo "Lets get to work..."
-echo
 
 
 # Main program loop
@@ -285,11 +304,13 @@ print_row "/recon/httprobe" "$url/recon/httprobe"
 print_row "/recon/potential_takeovers" "$url/recon/potential_takeovers"
 print_row "/recon/wayback" "$url/recon/wayback"
 print_row "/recon/dnsrecon" "$url/recon/dnsrecon"
+print_row "/recon/wayback/params" "$url/recon/wayback/params"
+print_row "/recon/wayback/extensions" "$url/recon/wayback/extensions"
 print_row "/enumeration/whatweb" "$url/enumeration/whatweb"
 print_row "/enumeration/nikto" "$url/enumeration/nikto"
 print_row "/enumeration/nuclei" "$url/enumeration/nuclei"
-print_row "/recon/wayback/params" "$url/recon/wayback/params"
-print_row "/recon/wayback/extensions" "$url/recon/wayback/extensions"
+print_row "/enumeration/wpscan" "$url/enumeration/wpscan"
+
 
 red "Would you like to browse gowitness images and launch server? (yes or no) "
 read yesorno
