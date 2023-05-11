@@ -139,7 +139,7 @@ fi
 subjack -w $url/recon/final.txt -t 100 -timeout 30 -ssl -c /usr/share/subjack/fingerprints.json -v 3 -o $url/recon/potential_takeovers/potential_takeovers.txt
  
 purple "[+] Scanning for open ports..."
-(nmap -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned.txt) &
+(nmap -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned.txt -v0) &
 spinner $!
 printf "\n"
 
@@ -194,7 +194,7 @@ spinner $!
 printf "\n"
 
 purple "[+] Running GoWitness against all compiled domains..."
-(gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3) &
+(gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3 &> /dev/null) &
 spinner $!
 printf "\n"
 
