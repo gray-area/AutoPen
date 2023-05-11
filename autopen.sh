@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # To check your $GOPATH, enter "go env" into terminal.
-# Script taken from Heath Adams PNPT
+# To add to script, place entry in dir creation, recon or enumerate function and table output
 
 figlet AutoPen v.1
 
@@ -64,6 +64,8 @@ fi
 
 # Function to run Recon
 run_recon() {
+
+# Recon Dir Creation
 
 if [ ! -d "$url/recon" ];then
         mkdir $url/recon
@@ -200,10 +202,17 @@ printf "\n"
     echo
 }
 
+# END OF RECON FUNCTION
+
+
+
+
 # Function to run Enumerate
 run_enum() {
     echo "Running Enumerate..."
 	echo
+# Enumerate Dir Creation	
+
 if [ ! -d "$url/enumeration" ];then
         mkdir $url/enumeration
 fi
@@ -248,15 +257,21 @@ cat $url/enumeration/nuclei/n.txt | sort > $url/enumeration/nuclei/nuclei.txt
 rm $url/enumeration/nuclei/n.txt) &
 spinner $!
 printf "\n"
-    echo "Enumerate executed."
-    echo
-}
 
 purple "[+] Running WPScan..."
 (grep wordpress-detect $url/enumeration/nuclei/nuclei.txt | grep -o 'https\?://[^ ]*' | sed '/$url/!d' | sort -u > $url/enumeration/wpscan/wp_urls.txt
 cat $url/enumeration/wpscan/wp_urls.txt | while true ; do read url; if [ "" = "$wpscanned" ] ; then break; fi ; wpscan --url $wpscanned -e -o $wpscanned_results.txt; done) &
 spinner $!
 printf "\n"
+
+    echo "Enumerate executed."
+    echo
+
+
+}
+
+# END OF EUMERATE FUNCTION
+
 
 
 
