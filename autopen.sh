@@ -141,13 +141,13 @@ spinner $!
 printf "\n"
  
 purple "[+] Scanning for open ports..."
-(nmap -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned.txt 2>&1) &
+(nmap -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned.txt --noninteractive 2>&1) &
 spinner $!
 printf "\n"
 
 purple "[+] Scraping wayback data..."
-(cat $url/recon/final.txt | waybackurls >> $url/recon/wayback/wayback_output.txt
-sort -u $url/recon/wayback/wayback_output.txt 2>&1) &
+(cat $url/recon/final.txt | waybackurls >> $url/recon/wayback/wayback_output.txt 2>&1
+sort -u $url/recon/wayback/wayback_output.txt) &
 spinner $!
 printf "\n"
 
