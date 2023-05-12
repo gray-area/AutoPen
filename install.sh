@@ -26,7 +26,6 @@ function purple(){
 sudo apt install figlet
 sudo apt install libtext-asciitable-perl
 sudo apt install wpscan
-sudo apt install nuclei
 
 # Install Go tools required for functions.
 # To check your $GOPATH, enter "go env" into terminal.
@@ -41,6 +40,8 @@ blue "[+] Installing amass..."
 go install github.com/OWASP/Amass/v3/...@latest
 blue "[+] Installing subjack..."
 go install github.com/haccer/subjack@latest
+blue "[+] Installing nuclei..."
+go install github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest
 
 #blue "[+] Installing CMSmap..."
 #sudo git clone github.com/dionach/CMSmap.git
