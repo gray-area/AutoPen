@@ -44,7 +44,7 @@ function purple(){
 }
 
 
-red "Enter Domain in format: domain.com. Do not place www before."
+red"Enter Domain in format: domain.com. Do not place www before."
 
 read -p "Enter Domain: " url
 
@@ -117,7 +117,7 @@ spinner $!
 printf "\n"
  
 purple "[+] Double checking for subdomains with Amass..."
-(amass enum -d $url >> $url/recon/f.txt
+(amass enum -d $url >> $url/recon/f.txt 2>&1
 sort -u $url/recon/f.txt >> $url/recon/final.txt
 rm $url/recon/f.txt) &
 spinner $!
@@ -131,27 +131,29 @@ spinner $!
 printf "\n"
 
 purple "[+] Checking for possible subdomain takeover..."
- 
+( 
 if [ ! -f "$url/recon/potential_takeovers/potential_takeovers.txt" ];then
 	touch $url/recon/potential_takeovers/potential_takeovers.txt
 fi
  
-subjack -w $url/recon/final.txt -t 100 -timeout 30 -ssl -c /usr/share/subjack/fingerprints.json -v 3 -o $url/recon/potential_takeovers/potential_takeovers.txt
+subjack -w $url/recon/final.txt -t 100 -timeout 30 -ssl -c /usr/share/subjack/fingerprints.json -v 3 -o $url/recon/potential_takeovers/potential_takeovers.txt 2>&1) &
+spinner $!
+printf "\n"
  
 purple "[+] Scanning for open ports..."
-(nmap -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned.txt -v0) &
+(nmap -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned.txt 2>&1) &
 spinner $!
 printf "\n"
 
 purple "[+] Scraping wayback data..."
 (cat $url/recon/final.txt | waybackurls >> $url/recon/wayback/wayback_output.txt
-sort -u $url/recon/wayback/wayback_output.txt) &
+sort -u $url/recon/wayback/wayback_output.txt 2>&1) &
 spinner $!
 printf "\n"
 
 purple "[+] Pulling and compiling all possible params found in wayback data..."
 (cat $url/recon/wayback/wayback_output.txt | grep '?*=' | cut -d '=' -f 1 | sort -u >> $url/recon/wayback/params/wayback_params.txt
-for line in $(cat $url/recon/wayback/params/wayback_params.txt);do echo $line'=';done) &
+for line in $(cat $url/recon/wayback/params/wayback_params.txt);do echo $line'=';done 2>&1) &
 spinner $!
 printf "\n"
 
@@ -194,7 +196,7 @@ spinner $!
 printf "\n"
 
 purple "[+] Running GoWitness against all compiled domains..."
-(gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3 &> /dev/null) &
+(gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3 2>&1) &
 spinner $!
 printf "\n"
 
@@ -252,7 +254,7 @@ spinner $!
 printf "\n"
 
 purple "[+] Running Nuclei..."
-(nuclei -u https://www.$url > $url/enumeration/nuclei/n.txt
+(nuclei -u https://www.$url > $url/enumeration/nuclei/n.txt 2>&1
 cat $url/enumeration/nuclei/n.txt | sort > $url/enumeration/nuclei/nuclei.txt
 rm $url/enumeration/nuclei/n.txt) &
 spinner $!
@@ -303,6 +305,7 @@ while true; do
 done
 
 # Function to print Directories and Files created to a table
+echo
 blue "[+] Here are the locations and number of files created...Happy Hacking!" echo
 print_row() {
   local name="$1" path="$2" 
@@ -327,6 +330,7 @@ print_row "/enumeration/nuclei" "$url/enumeration/nuclei"
 print_row "/enumeration/wpscan" "$url/enumeration/wpscan"
 
 
+echo
 red "Would you like to browse gowitness images and launch server? (yes or no) "
 read yesorno
 
