@@ -44,7 +44,7 @@ function purple(){
 }
 
 
-red"Enter Domain in format: domain.com. Do not place www before."
+red "Enter Domain in format: domain.com. Do not place www before."
 
 read -p "Enter Domain: " url
 
