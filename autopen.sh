@@ -275,6 +275,35 @@ printf "\n"
 # END OF EUMERATE FUNCTION
 
 
+
+
+# Main program loop
+while true; do
+    show_menu
+    read -p "Enter your choice (1-4): " choice
+    echo
+
+    case $choice in
+        1)
+            run_recon
+            ;;
+        2)
+            run_enum
+            ;;
+        3)
+            run_recon && run_enum
+            ;;
+        4)
+            echo "Exiting..."
+            break
+            ;;
+        *)
+            echo "Invalid choice. Please enter a number from 1 to 4."
+            echo
+            ;;
+    esac
+done
+
 # Function to print Directories and Files created to a table
 echo
 blue "[+] Here are the locations and number of files created...Happy Hacking!" echo
@@ -318,34 +347,4 @@ else
         exit 1
 
 fi
-
-
-# Main program loop
-while true; do
-    show_menu
-    read -p "Enter your choice (1-4): " choice
-    echo
-
-    case $choice in
-        1)
-            run_recon
-            ;;
-        2)
-            run_enum
-            ;;
-        3)
-            run_recon && run_enum
-            ;;
-        4)
-            echo "Exiting..."
-            break
-            ;;
-        *)
-            echo "Invalid choice. Please enter a number from 1 to 4."
-            echo
-            ;;
-    esac
-done
-
-
 
