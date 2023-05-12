@@ -141,7 +141,7 @@ spinner $!
 printf "\n"
  
 purple "[+] Scanning for open ports..."
-(nmap -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned.txt --noninteractive 2>&1) &
+(nmap -iL $url/recon/httprobe/alive.txt -T4 > scanned.txt 2>&1) &
 spinner $!
 printf "\n"
 
