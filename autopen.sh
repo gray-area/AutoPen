@@ -153,7 +153,7 @@ printf "\n"
 
 purple "[+] Pulling and compiling all possible params found in wayback data..."
 (cat $url/recon/wayback/wayback_output.txt | grep '?*=' | cut -d '=' -f 1 | sort -u > $url/recon/wayback/params/wayback_params.txt 2>&1
-for line in $(cat $url/recon/wayback/params/wayback_params.txt);do echo $line'=';done 2>&1) &
+#for line in $(cat $url/recon/wayback/params/wayback_params.txt);do echo $line'=' 2>&1 ;done) &
 spinner $!
 printf "\n"
 
@@ -161,23 +161,23 @@ purple "[+] Pulling and compiling js/php/aspx/jsp/json files from wayback output
 (for line in $(cat $url/recon/wayback/wayback_output.txt);do
 	ext="${line##*.}"
 	if [[ "$ext" == "js" ]]; then
-		echo $line >> $url/recon/wayback/extensions/js1.txt
+		echo $line >> $url/recon/wayback/extensions/js1.txt 2>&1
 		cat $url/recon/wayback/extensions/js1.txt | sort -u > $url/recon/wayback/extensions/js.txt 2>&1
 	fi
 	if [[ "$ext" == "html" ]];then
-		echo $line >> $url/recon/wayback/extensions/jsp1.txt
+		echo $line >> $url/recon/wayback/extensions/jsp1.txt 2>&1
 		cat $url/recon/wayback/extensions/jsp1.txt | sort -u > $url/recon/wayback/extensions/jsp.txt 2>&1
 	fi
 	if [[ "$ext" == "json" ]];then
-		echo $line >> $url/recon/wayback/extensions/json1.txt
+		echo $line >> $url/recon/wayback/extensions/json1.txt 2>&1
 		cat $url/recon/wayback/extensions/json1.txt | sort -u > $url/recon/wayback/extensions/json.txt 2>&1
 	fi
 	if [[ "$ext" == "php" ]];then
-		echo $line >> $url/recon/wayback/extensions/php1.txt
+		echo $line >> $url/recon/wayback/extensions/php1.txt 2>&1
 		cat $url/recon/wayback/extensions/php1.txt | sort -u > $url/recon/wayback/extensions/php.txt 2>&1
 	fi
 	if [[ "$ext" == "aspx" ]];then
-		echo $line >> $url/recon/wayback/extensions/aspx1.txt
+		echo $line >> $url/recon/wayback/extensions/aspx1.txt 2>&1
 		cat $url/recon/wayback/extensions/aspx1.txt | sort -u > $url/recon/wayback/extensions/aspx.txt 2>&1
 	fi
 done
@@ -205,9 +205,9 @@ printf "\n"
 }
 
 # END OF RECON FUNCTION
-
-
-
+#
+#
+#
 
 # Function to run Enumerate
 run_enum() {
