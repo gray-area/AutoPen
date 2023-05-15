@@ -152,7 +152,7 @@ spinner $!
 printf "\n"
 
 purple "[+] Pulling and compiling all possible params found in wayback data..."
-(cat $url/recon/wayback/wayback_output.txt | grep '?*=' | cut -d '=' -f 1 | sort -u > $url/recon/wayback/params/wayback_params.txt 2>&1
+(cat $url/recon/wayback/wayback_output.txt | grep '?*=' | cut -d '=' -f 1 | sort -u > $url/recon/wayback/params/wayback_params.txt 2>&1)
 #for line in $(cat $url/recon/wayback/params/wayback_params.txt);do echo $line'=' 2>&1 ;done) &
 spinner $!
 printf "\n"
