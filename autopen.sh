@@ -112,20 +112,20 @@ echo
 echo "Running Recon..."
 echo
 purple "[+] Harvesting subdomains with AssetFinder..."
-(assetfinder $url >> $url/recon/final.txt) &
+(assetfinder $url &> $url/recon/final.txt) &
 spinner $!
 printf "\n"
  
 purple "[+] Double checking for subdomains with Amass..."
-(amass enum -d $url >> $url/recon/f.txt 2>&1
-sort -u $url/recon/f.txt >> $url/recon/final.txt
+(amass enum -d $url &> $url/recon/f.txt
+sort -u $url/recon/f.txt &> $url/recon/final.txt
 rm $url/recon/f.txt) &
 spinner $!
 printf "\n"
  
 purple "[+] Probing for alive domains..."
-(cat $url/recon/final.txt | sort -u | httprobe -s -p https:443 | sed 's/https\?:\/\///' | tr -d ':443' >> $url/recon/httprobe/a.txt
-sort -u $url/recon/httprobe/a.txt > $url/recon/httprobe/alive.txt
+(cat $url/recon/final.txt | sort -u | httprobe -s -p https:443 | sed 's/https\?:\/\///' | tr -d ':443' &> $url/recon/httprobe/a.txt
+sort -u $url/recon/httprobe/a.txt &> $url/recon/httprobe/alive.txt
 rm $url/recon/httprobe/a.txt) &
 spinner $!
 printf "\n"
@@ -136,24 +136,24 @@ if [ ! -f "$url/recon/potential_takeovers/potential_takeovers.txt" ];then
 	touch $url/recon/potential_takeovers/potential_takeovers.txt
 fi
  
-subjack -w $url/recon/final.txt -t 100 -timeout 30 -ssl -c /usr/share/subjack/fingerprints.json -v 3 -o $url/recon/potential_takeovers/potential_takeovers.txt 2>&1) &
+subjack -w $url/recon/final.txt -t 100 -timeout 30 -ssl -c /usr/share/subjack/fingerprints.json -v 3 -o $url/recon/potential_takeovers/potential_takeovers.txt) &
 spinner $!
 printf "\n"
  
 purple "[+] Scanning for open ports..."
-(nmap -iL $url/recon/httprobe/alive.txt -T4 > scanned.txt 2>&1) &
+(nmap -iL $url/recon/httprobe/alive.txt -T4 &> scanned.txt) &
 spinner $!
 printf "\n"
 
 purple "[+] Scraping wayback data..."
-(cat $url/recon/final.txt | waybackurls > $url/recon/wayback/wayback_output.txt 2>&1
+(cat $url/recon/final.txt | waybackurls &> $url/recon/wayback/wayback_output.txt
 sort -u $url/recon/wayback/wayback_output.txt) &
 spinner $!
 printf "\n"
 
 purple "[+] Pulling and compiling all possible params found in wayback data..."
-(cat $url/recon/wayback/wayback_output.txt | grep '?*=' | cut -d '=' -f 1 | sort -u > $url/recon/wayback/params/wayback_params.txt 2>&1)
-#for line in $(cat $url/recon/wayback/params/wayback_params.txt);do echo $line'=' 2>&1 ;done) &
+(cat $url/recon/wayback/wayback_output.txt | grep '?*=' | cut -d '=' -f 1 | sort -u &> $url/recon/wayback/params/wayback_params.txt)
+#for line in $(cat $url/recon/wayback/params/wayback_params.txt);do echo $line'=' ;done) &
 spinner $!
 printf "\n"
 
@@ -161,37 +161,37 @@ purple "[+] Pulling and compiling js/php/aspx/jsp/json files from wayback output
 (for line in $(cat $url/recon/wayback/wayback_output.txt);do
 	ext="${line##*.}"
 	if [[ "$ext" == "js" ]]; then
-		echo $line >> $url/recon/wayback/extensions/js1.txt 2>&1
-		cat $url/recon/wayback/extensions/js1.txt | sort -u > $url/recon/wayback/extensions/js.txt 2>&1
+		echo $line &>> $url/recon/wayback/extensions/js1.txt
+		cat $url/recon/wayback/extensions/js1.txt | sort -u &> $url/recon/wayback/extensions/js.txt
 	fi
 	if [[ "$ext" == "html" ]];then
-		echo $line >> $url/recon/wayback/extensions/jsp1.txt 2>&1
-		cat $url/recon/wayback/extensions/jsp1.txt | sort -u > $url/recon/wayback/extensions/jsp.txt 2>&1
+		echo $line &>> $url/recon/wayback/extensions/jsp1.txt
+		cat $url/recon/wayback/extensions/jsp1.txt | sort -u &> $url/recon/wayback/extensions/jsp.txt
 	fi
 	if [[ "$ext" == "json" ]];then
-		echo $line >> $url/recon/wayback/extensions/json1.txt 2>&1
-		cat $url/recon/wayback/extensions/json1.txt | sort -u > $url/recon/wayback/extensions/json.txt 2>&1
+		echo $line &>> $url/recon/wayback/extensions/json1.txt
+		cat $url/recon/wayback/extensions/json1.txt | sort -u &> $url/recon/wayback/extensions/json.txt
 	fi
 	if [[ "$ext" == "php" ]];then
-		echo $line >> $url/recon/wayback/extensions/php1.txt 2>&1
-		cat $url/recon/wayback/extensions/php1.txt | sort -u > $url/recon/wayback/extensions/php.txt 2>&1
+		echo $line &>> $url/recon/wayback/extensions/php1.txt
+		cat $url/recon/wayback/extensions/php1.txt | sort -u &> $url/recon/wayback/extensions/php.txt
 	fi
 	if [[ "$ext" == "aspx" ]];then
-		echo $line >> $url/recon/wayback/extensions/aspx1.txt 2>&1
-		cat $url/recon/wayback/extensions/aspx1.txt | sort -u > $url/recon/wayback/extensions/aspx.txt 2>&1
+		echo $line &>> $url/recon/wayback/extensions/aspx1.txt
+		cat $url/recon/wayback/extensions/aspx1.txt | sort -u &> $url/recon/wayback/extensions/aspx.txt
 	fi
 done
  
-rm $url/recon/wayback/extensions/js1.txt 2>&1
-rm $url/recon/wayback/extensions/jsp1.txt 2>&1
-rm $url/recon/wayback/extensions/json1.txt 2>&1
-rm $url/recon/wayback/extensions/php1.txt 2>&1
-rm $url/recon/wayback/extensions/aspx1.txt) 2>&1 & 
+rm $url/recon/wayback/extensions/js1.txt
+rm $url/recon/wayback/extensions/jsp1.txt
+rm $url/recon/wayback/extensions/json1.txt
+rm $url/recon/wayback/extensions/php1.txt
+rm $url/recon/wayback/extensions/aspx1.txt) & 
 spinner $!
 printf "\n"
 
 purple "[+] Running DNSRecon w/ zonewalk, crt and axfr..."
-(dnsrecon -d $url -t zonewalk,crt,axfr > $url/recon/dnsrecon/dnsrecon.txt) &
+(dnsrecon -d $url -t zonewalk,crt,axfr &> $url/recon/dnsrecon/dnsrecon.txt) &
 spinner $!
 printf "\n"
 
@@ -240,7 +240,7 @@ echo "Lets get to work..."
 echo
 
 purple "[+] Running WhatWeb..."
-(whatweb www.$url > $url/enumeration/whatweb/whatweb.txt
+(whatweb www.$url &> $url/enumeration/whatweb/whatweb.txt
 
 cat relax 
 echo
@@ -249,19 +249,19 @@ spinner $!
 printf "\n"
 
 purple "[+] Running Nikto..."
-(nikto -h www.$url > $url/enumeration/nikto/nikto.txt) &
+(nikto -h www.$url &> $url/enumeration/nikto/nikto.txt) &
 spinner $!
 printf "\n"
 
 purple "[+] Running Nuclei..."
-(nuclei -u https://www.$url > $url/enumeration/nuclei/n.txt 2>&1
-cat $url/enumeration/nuclei/n.txt | sort > $url/enumeration/nuclei/nuclei.txt
+(nuclei -u https://www.$url &> $url/enumeration/nuclei/n.txt
+cat $url/enumeration/nuclei/n.txt | sort &> $url/enumeration/nuclei/nuclei.txt
 rm $url/enumeration/nuclei/n.txt) &
 spinner $!
 printf "\n"
 
 purple "[+] Running WPScan..."
-(grep wordpress-detect $url/enumeration/nuclei/nuclei.txt | grep -o 'https\?://[^ ]*' | sed '/$url/!d' | sort -u > $url/enumeration/wpscan/wp_urls.txt
+(grep wordpress-detect $url/enumeration/nuclei/nuclei.txt | grep -o 'https\?://[^ ]*' | sed '/$url/!d' | sort -u &> $url/enumeration/wpscan/wp_urls.txt
 cat $url/enumeration/wpscan/wp_urls.txt | while true ; do read url; if [ "" = "$wpscanned" ] ; then break; fi ; wpscan --url $wpscanned -e -o $wpscanned_results.txt; done) &
 spinner $!
 printf "\n"
