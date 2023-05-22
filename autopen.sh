@@ -146,8 +146,7 @@ spinner $!
 printf "\n"
 
 purple "[+] Scraping wayback data..."
-(cat $url/recon/final.txt | waybackurls &> $url/recon/wayback/wayback_output.txt
-sort -u $url/recon/wayback/wayback_output.txt) &
+(cat $url/recon/final.txt | waybackurls &> $url/recon/wayback/wayback_output.txt | sort -u -o $url/recon/wayback/wayback_output.txt) &
 spinner $!
 printf "\n"
 
@@ -196,7 +195,7 @@ spinner $!
 printf "\n"
 
 purple "[+] Running GoWitness against all compiled domains..."
-(gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3 2>&1) &
+(gowitness file -f $url/recon/httprobe/alive.txt -P $url/recon/gowitness --delay 3 &> /dev/null) &
 spinner $!
 printf "\n"
 
