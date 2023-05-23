@@ -128,18 +128,18 @@ rm $url/recon/httprobe/a.txt) &
 spinner $!
 printf "\n"
 
-#purple "[+] Checking for possible subdomain takeover..."
-#( 
-#if [ ! -f "$url/recon/potential_takeovers/potential_takeovers.txt" ];then
-#	touch $url/recon/potential_takeovers/potential_takeovers.txt
-#fi
-# 
-#subjack -w $url/recon/final.txt -t 100 -timeout 30 -ssl -c /usr/share/subjack/fingerprints.json -v 3 -o $url/recon/potential_takeovers/potential_takeovers.txt) &
-#spinner $!
-#printf "\n"
+purple "[+] Checking for possible subdomain takeover..."
+( 
+if [ ! -f "$url/recon/potential_takeovers/potential_takeovers.txt" ];then
+	touch $url/recon/potential_takeovers/potential_takeovers.txt
+fi
+ 
+subjack -w $url/recon/final.txt -t 100 -timeout 30 -ssl -c /usr/share/subjack/fingerprints.json -v 3 -o $url/recon/potential_takeovers/potential_takeovers.txt) &
+spinner $!
+printf "\n"
  
 purple "[+] Scanning for open ports..."
-(nmap -sV -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned &> scanned.txt) &
+(nmap -sV -Pn -n -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned &> scanned.txt) &
 spinner $!
 printf "\n"
 
@@ -228,6 +228,9 @@ fi
 if [ ! -d "$url/enumeration/wpscan" ];then
         mkdir $url/enumeration/wpscan
 fi
+if [ ! -d "$url/enumeration/searchsploit" ];then
+        mkdir $url/enumeration/searchsploit
+fi
 
 
 blue "[+] Enumeration directory structure has been created!"
@@ -260,7 +263,7 @@ spinner $!
 printf "\n"
 
 purple "[+] Running Searchsploit..."
-(searchsploit --nmap $url/recon/scans/scanned.xml) &
+(searchsploit --nmap $url/recon/scans/scanned.xml 2> /dev/null | tee $url/enumeration/searchsploit/sploits.txt) &
 spinner $!
 printf "\n"
 
@@ -336,6 +339,7 @@ print_row "/enumeration/whatweb" "$url/enumeration/whatweb"
 print_row "/enumeration/nikto" "$url/enumeration/nikto"
 print_row "/enumeration/nuclei" "$url/enumeration/nuclei"
 print_row "/enumeration/wpscan" "$url/enumeration/wpscan"
+print_row "/enumeration/searchsploit" "$url/enumeration/searchhsploit"
 
 
 echo
