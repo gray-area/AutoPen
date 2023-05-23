@@ -53,9 +53,9 @@ show_menu() {
     echo "========= MENU ========="
     echo "1. Recon"
     echo "2. Enumerate"
-    echo "3. YOLO"
+    echo "3. YOLO (BOTH)"
     echo "4. Exit"
-    echo "========================"}
+    echo "========================"
 }
 
     if [ ! -d "$url" ];then
@@ -106,8 +106,6 @@ echo
 blue "[+] Recon directory structure has been created!"
 
 echo
-echo "Lets get to work..."
-echo
 
 echo "Running Recon..."
 echo
@@ -141,7 +139,7 @@ spinner $!
 printf "\n"
  
 purple "[+] Scanning for open ports..."
-(nmap -iL $url/recon/httprobe/alive.txt -T4 &> scanned.txt) &
+(nmap -sC -sV -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned &> scanned.txt) &
 spinner $!
 printf "\n"
 
@@ -199,7 +197,8 @@ purple "[+] Running GoWitness against all compiled domains..."
 spinner $!
 printf "\n"
 
-    echo "Recon executed."
+    echo
+	echo "Recon executed."
     echo
 }
 
@@ -230,13 +229,8 @@ if [ ! -d "$url/enumeration/wpscan" ];then
         mkdir $url/enumeration/wpscan
 fi
 
-echo
 
 blue "[+] Enumeration directory structure has been created!"
-
-echo
-echo "Lets get to work..."
-echo
 
 purple "[+] Running WhatWeb..."
 (whatweb www.$url &> $url/enumeration/whatweb/whatweb.txt
@@ -265,7 +259,13 @@ cat $url/enumeration/wpscan/wp_urls.txt | while true ; do read url; if [ "" = "$
 spinner $!
 printf "\n"
 
-    echo "Enumerate executed."
+purple "[+] Running Searchsploit..."
+(searchsploit --nmap scanned.xml) &
+spinner $!
+printf "\n"
+
+    echo
+	echo "Enumerate executed."
     echo
 
 
@@ -284,13 +284,22 @@ while true; do
 
     case $choice in
         1)
-            run_recon
+            echo
+			echo "Lets get to work..."
+			run_recon
+			break
             ;;
         2)
-            run_enum
+            echo
+			echo "Lets get to work..."
+			run_enum
+			break
             ;;
         3)
-            run_recon && run_enum
+            echo
+			echo "Lets get to work..."
+			run_recon && run_enum
+			break
             ;;
         4)
             echo "Exiting..."
