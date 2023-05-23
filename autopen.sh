@@ -260,7 +260,7 @@ spinner $!
 printf "\n"
 
 purple "[+] Running Searchsploit..."
-(searchsploit --nmap scanned.xml) &
+(searchsploit --nmap $url/recon/scans/scanned.xml) &
 spinner $!
 printf "\n"
 
