@@ -128,18 +128,18 @@ rm $url/recon/httprobe/a.txt) &
 spinner $!
 printf "\n"
 
-purple "[+] Checking for possible subdomain takeover..."
-( 
-if [ ! -f "$url/recon/potential_takeovers/potential_takeovers.txt" ];then
-	touch $url/recon/potential_takeovers/potential_takeovers.txt
-fi
- 
-subjack -w $url/recon/final.txt -t 100 -timeout 30 -ssl -c /usr/share/subjack/fingerprints.json -v 3 -o $url/recon/potential_takeovers/potential_takeovers.txt) &
-spinner $!
-printf "\n"
+#purple "[+] Checking for possible subdomain takeover..."
+#( 
+#if [ ! -f "$url/recon/potential_takeovers/potential_takeovers.txt" ];then
+#	touch $url/recon/potential_takeovers/potential_takeovers.txt
+#fi
+# 
+#subjack -w $url/recon/final.txt -t 100 -timeout 30 -ssl -c /usr/share/subjack/fingerprints.json -v 3 -o $url/recon/potential_takeovers/potential_takeovers.txt) &
+#spinner $!
+#printf "\n"
  
 purple "[+] Scanning for open ports..."
-(nmap -sC -sV -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned &> scanned.txt) &
+(nmap -sV -iL $url/recon/httprobe/alive.txt -T4 -oA $url/recon/scans/scanned &> scanned.txt) &
 spinner $!
 printf "\n"
 
