@@ -339,7 +339,7 @@ print_row "/enumeration/whatweb" "$url/enumeration/whatweb"
 print_row "/enumeration/nikto" "$url/enumeration/nikto"
 print_row "/enumeration/nuclei" "$url/enumeration/nuclei"
 print_row "/enumeration/wpscan" "$url/enumeration/wpscan"
-print_row "/enumeration/searchsploit" "$url/enumeration/searchhsploit"
+print_row "/enumeration/searchsploit" "$url/enumeration/searchsploit"
 
 
 echo
