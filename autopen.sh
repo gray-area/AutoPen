@@ -263,7 +263,7 @@ cat $url/enumeration/wpscan/wp_urls.txt | while true ; do read url; if [ "" = "$
 spinner $!
 printf "\n"
 
-purple "[+] Running Searchsploit..."
+purple "[+] Running Searchsploit..." printf "\n"
 (searchsploit --nmap $url/recon/scans/scanned.xml 2> /dev/null | tee $url/enumeration/searchsploit/sploits.txt) &
 spinner $!
 printf "\n"
