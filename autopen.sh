@@ -232,7 +232,7 @@ if [ ! -d "$url/enumeration/searchsploit" ];then
         mkdir $url/enumeration/searchsploit
 fi
 
-
+echo
 blue "[+] Enumeration directory structure has been created!"
 
 purple "[+] Running WhatWeb..."
